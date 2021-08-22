@@ -1,11 +1,23 @@
+import numpy as np
+import cv2
+import sys
+import os
+
+
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.models import load_model
+
+
+
 class MaskDetector:
 	def __init__(self):
 		self.cam = cv2.VideoCapture(0)
-		self.net_caffe_model = cv2.dnn.readNetFromCaffe("weights.txt", "res.caffemodel")
-		self.mask_detection_model = load_model("./Mask_detection_model/mask_detector.model")
+		self.net_caffe_model = cv2.dnn.readNetFromCaffe("./Face_detection_models/weights.txt", "./Face_detection_models/res.caffemodel")
 		
+
 	def __del__(self):
-		cam.release()
+		self.cam.release()
 		cv2.destroyAllWindows()
 	
 	def take_frame(self):
@@ -16,8 +28,8 @@ class MaskDetector:
 	
 	def face_detection(self):
 		self.take_frame()
-		self.image = cv2.resize(image, (300, 300))
-		(photo_height, photo_width) = image.shape[:2]
+		self.image = cv2.resize(self.image, (300, 300))
+		(photo_height, photo_width) = self.image.shape[:2]
 		photo_blob = cv2.dnn.blobFromImage(self.image, 1.0, (300, 300), (104, 117, 123))
 		
 		# make detections on the photo
@@ -27,11 +39,11 @@ class MaskDetector:
         # loop over all detections
 		for i in range(0, self.detections.shape[2]):
 			# take confidence of prediction
-			confidence = detections[0, 0, i, 2]
+			confidence = self.detections[0, 0, i, 2]
 
             # minimum confidence threshold
 			if confidence > 0.5:
-				box = detections[0, 0, i, 3:7] * np.array([photo_width, photo_height,photo_width, photo_height])
+				box = self.detections[0, 0, i, 3:7] * np.array([photo_width, photo_height,photo_width, photo_height])
 				(x1, y1, x2, y2) = box.astype("int")
 				cv2.rectangle(self.image, (x1, y1), (x2, y2), (255, 0, 255), 2)
 		
@@ -48,7 +60,8 @@ class MaskDetector:
 				face = img_to_array(face)
 				face = np.expand_dims(face, axis=0)
                 
-                #making mask predictions 
+                #making mask predictions
+				self.mask_detection_model = load_model("./Mask_detection_model/mask.model")
 				(mask_prediction, no_mask_prediction) = self.mask_detection_model.predict(face)[0]
 				print(f"mask prediction: {mask_prediction} ")
 				print(f"no mask prediction: {no_mask_prediction}")

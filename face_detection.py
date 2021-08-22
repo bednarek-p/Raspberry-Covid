@@ -1,22 +1,21 @@
-import numpy as np
-import cv2
-import keyboard
-
 from mask_detector import MaskDetector
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
-from tensorflow.keras.preprocessing.image import img_to_array
-from tensorflow.keras.models import load_model
+from pynput.keyboard import Key, Listener
+
+def on_press(key):
+    
+    if key == Key.tab:
+        mask_detector = MaskDetector()
+        mask_detector.take_frame()
+        mask_detector.face_detection()
+          
+    if key != Key.tab:
+        print("Escape hit, closing...")
+        return False
+          
+    
+  
+# Collect all event until released
+with Listener(on_press = on_press) as listener:
+    listener.join()
 
 
-
-print("LETS GO")
-while True:  # making a loop
-	#ESCAPE PRESED
-	if keyboard.is_pressed('q'):  
-		print("Escape hit, closing...")
-		break
-	# SPACE pressed
-	elif keyboard.is_pressed('t'):
-		mask_detector = MaskDetector()
-		mask_detector.take_frame()
-		mask_detector.face_detection()
