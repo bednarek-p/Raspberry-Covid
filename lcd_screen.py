@@ -4,7 +4,7 @@ from Adafruit_CharLCD import Adafruit_CharLCD
 class LcdScreen:
     def __init__(self):
         self.lcd = Adafruit_CharLCD(rs=26, en=19,
-                       d4=13, d5=6, d6=5, d7=24,
+                       d4=13, d5=27, d6=17, d7=24,
                        cols=16, lines=2)
         self.lcd.clear()
 
