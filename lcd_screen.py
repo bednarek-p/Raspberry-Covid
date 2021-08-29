@@ -9,6 +9,7 @@ class LcdScreen:
         self.lcd.clear()
 
     def write(self,msg):
+        self.clear()
         self.lcd.message(msg)
         sleep(3)
 
