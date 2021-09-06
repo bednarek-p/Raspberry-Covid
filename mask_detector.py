@@ -45,6 +45,10 @@ class MaskDetector:
             if confidence > 0.5:
                 box = self.detections[0, 0, i, 3:7] * np.array([photo_width, photo_height,photo_width, photo_height])
                 (x1, y1, x2, y2) = box.astype("int")
+                # ensure the bounding boxes fall within the dimensions of
+                # the frame
+                (x1, y1) = (max(0, x1), max(0, y1))
+                (x2, y2) = (min(photo_width - 1, x2), min(photo_height - 1, y2))
                 cv2.rectangle(self.image, (x1, y1), (x2, y2), (255, 0, 255), 2)
 
                 #printing face coordinates
@@ -58,6 +62,7 @@ class MaskDetector:
                 face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
                 face = cv2.resize(face, (224,224))
                 face = img_to_array(face)
+                face = preprocess_input(face)
                 face = np.expand_dims(face, axis=0)
                 
                 #making mask predictions
