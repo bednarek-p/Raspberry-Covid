@@ -9,6 +9,7 @@ class LcdScreen:
         self.lcd.clear()
 
     def write(self,msg):
+        self.clear()
         self.lcd.message(msg)
         sleep(3)
 
@@ -27,5 +28,21 @@ class LcdScreen:
     def wait(self, seconds):
         sleep(seconds)
     
+    def count_down(self, seconds):
+        self.clear()
+        while(seconds >= 0):
+            self.lcd.message(str(seconds))
+            self.wait(1)
+            self.clear()
+            seconds -= 1
+            
+    def count_down(self, seconds, message):
+        self.clear()
+        while(seconds >= 0):
+            self.lcd.message(message + str(seconds))
+            self.wait(1)
+            self.clear()
+            seconds -= 1
+            
     def clear(self):
         self.lcd.clear()
