@@ -8,7 +8,7 @@ mask_detector = MaskDetector()
 temp_sensor = TemperatureSensor()
 
 lcd_screen.write("Starting all\nProcedures")
-lcd_screen.wait(2)
+lcd_screen.wait(5)
 lcd_screen.clear()
 
 lcd_screen.count_down(5,"Temperature\n check: ")
@@ -17,7 +17,7 @@ lcd_screen.write(f"TEMP:{tmp}")
 lcd_screen.wait(2)
 
 
-lcd_screen.count_down(5,"Mask check. Face\nthe Camera: ")
+lcd_screen.count_down(7,"Mask check. Face\nthe Camera: ")
 mask_detector.take_frame()
 lcd_screen.write("Processing Image\nPlease wait...")
 res = mask_detector.face_detection()
