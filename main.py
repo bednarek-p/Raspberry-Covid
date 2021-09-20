@@ -2,10 +2,11 @@ from mask_detector import MaskDetector
 from lcd_screen import LcdScreen
 from temp_sensor import TemperatureSensor
 from button import Button
-
+from pir_sensor import PirSensor
 
 #INITIALIZATION
 button = Button()
+pir_sensor = PirSensor()
 lcd_screen = LcdScreen()
 mask_detector = MaskDetector()
 temp_sensor = TemperatureSensor()
@@ -14,8 +15,6 @@ lcd_screen.write("Press button\nto start!")
 
 while True:
 	if button.is_pressed() == True:
-		
-
 		lcd_screen.write("Starting all\nProcedures")
 		lcd_screen.wait(5)
 		lcd_screen.clear()
@@ -25,7 +24,6 @@ while True:
 		lcd_screen.write(f"TEMP:{tmp}")
 		lcd_screen.wait(2)
 
-
 		lcd_screen.count_down(5,"Mask check. Face\nthe Camera: ")
 		mask_detector.take_frame()
 		lcd_screen.write("Processing Image\nPlease wait...")
@@ -34,8 +32,3 @@ while True:
 		
 		lcd_screen.wait(5)
 		lcd_screen.write("Press button\nto start!")
-
-
-
-
-
