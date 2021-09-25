@@ -11,8 +11,8 @@ class TemperatureSensor:
         self.mlx = adafruit_mlx90614.MLX90614(self.i2c)
     
     def get_target_temperature(self):
-        return "{:.2f}".format(self.mlx.object_temperature)
+        return "{:.2f}".format(float(self.mlx.object_temperature))
     
     def get_ambient_temperature(self):
-        return "{:.2f}".format(mlx.ambient_temperature) 
+        return "{:.2f}".format(float(mlx.ambient_temperature))
 
