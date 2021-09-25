@@ -52,10 +52,10 @@ class MaskDetector:
 
             #DEBUG
             #printing face coordinates
-            print(f"x1={x1}")
-            print(f"x2={x2}")
-            print(f"y1={y1}")
-            print(f"y2={y2}")
+            #print(f"x1={x1}")
+            #print(f"x2={x2}")
+            #print(f"y1={y1}")
+            #print(f"y2={y2}")
                 
             #MASK DETECTION
             face = self.image[y1 : y2,x1 : x2]
@@ -69,27 +69,27 @@ class MaskDetector:
             (mask_prediction, no_mask_prediction) = self.mask_detection_model.predict(face)[0]
 
             if mask_prediction > no_mask_prediction:
-                label = "MASK "
+                #label = "MASK "
                 pred = round(max(mask_prediction,no_mask_prediction) * 100)
-                label += str(pred)
+                label = str(pred)
                 #DEBUG
                 #label_color = (0,255,0)
                 #cv2.putText(self.image,label,(x1,y1 - 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, label_color, 2)
                 #self.image = cv2.resize(self.image, (800, 800))
                 #cv2.imshow("Output", self.image)
                 #cv2.waitKey(0)
-                return label
+                return True, label
             else:
-                label = "NO MASK "
+                #label = "NO MASK "
                 pred = round(max(mask_prediction,no_mask_prediction) * 100)
-                label += str(pred)
+                label = str(pred)
                 #DEBUG
                 #label_color = (0,0,255)
                 #cv2.putText(self.image,label,(x1,y1 - 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, label_color, 2)
                 #self.image = cv2.resize(self.image, (800, 800))
                 #cv2.imshow("Output", self.image)
                 #cv2.waitKey(0)
-                return label
+                return False, label
         else:
-            label = "FACE NOT\nDETECTED!!"
-            return label
+            raise Exception('Face Not Detected')
+            return False, label

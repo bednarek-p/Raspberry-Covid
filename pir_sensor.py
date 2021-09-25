@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import datetime
 
 PIR_PIN_IN = 22
 
@@ -11,3 +12,11 @@ class PirSensor:
 			return True
 		else:
 			return False
+		
+	def wait_for_walk_in(self,timeout = 10):
+		start_time = datetime.datetime.now()
+		
+		while not self.is_triggered():
+			time_diff = (datetime.datetime.now() - start_time).total_seconds()
+			if time_diff > timeout:
+				break
