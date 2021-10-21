@@ -29,7 +29,7 @@ while True:
         lcd_screen.write(f"Temperature:\n{temperature}*C")
         lcd_screen.wait(2)
         
-        if float(temperature) >= 35 and float(temperature) <= 37:
+        if float(temperature) >= 33 and float(temperature) <= 38:
             lcd_screen.count_down(5,"Mask check. Face\nthe Camera: ")
             mask_detector.take_frame()
             lcd_screen.write("Processing Image\nPlease wait...")
