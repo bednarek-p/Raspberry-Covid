@@ -30,9 +30,10 @@ class MaskDetector:
         #take photo from the camera and preprocess input
         self.take_frame()
         self.image = cv2.resize(self.image, (300, 300))
+        self.image = cv2.rotate(self.image, cv2.cv2.ROTATE_180)
         (photo_height, photo_width) = self.image.shape[:2]
         photo_blob = cv2.dnn.blobFromImage(self.image, 1.0, (300, 300), (104, 117, 123))
-
+    
         # make face detections on the photo
         self.net_caffe_model.setInput(photo_blob)
         self.detections = self.net_caffe_model.forward()       
