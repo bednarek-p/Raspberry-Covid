@@ -89,7 +89,7 @@ class MaskDetector:
                 #cv2.putText(self.image,label,(x1,y1 - 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, label_color, 2)
                 #self.image = cv2.resize(self.image, (800, 800))
                 #cv2.imshow("Output", self.image)
-                #scv2.waitKey(0)
+                #cv2.waitKey(0)
                 return False, label
         else:
             raise Exception('Face Not Detected')
