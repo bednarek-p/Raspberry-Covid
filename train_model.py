@@ -99,7 +99,7 @@ def create_model():
     model = Model(inputs=base_model.input, outputs=head_model)
 
     # Loop over all layers in the base model and freeze them
-    # (ensure they won't be updates on training process)
+    # (ensure they won't be updated on training process)
     for layer in base_model.layers:
         layer.trainable = False
 
