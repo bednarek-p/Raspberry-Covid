@@ -59,12 +59,8 @@ def load_dataset():
     # Split the data into training and testing sets.
     # 80% for training, 20% for testing
     (trainX, testX, trainY, testY) = train_test_split(
-        data_array,
-        label_list,
-        test_size=0.20,
-        stratify=label_list,
-        random_state=42
-        )
+        data_array, label_list, test_size=0.20, stratify=label_list, random_state=42
+    )
 
     # Augment training data set using ImageDataGenerator
     augmented_data = ImageDataGenerator(
@@ -74,18 +70,17 @@ def load_dataset():
         height_shift_range=0.2,
         shear_range=0.15,
         horizontal_flip=True,
-        fill_mode="nearest")
+        fill_mode="nearest",
+    )
 
-    return trainX, testX, trainY, testY, augmented_data
+    return trainX, testX, trainY, testY, augmented_data, lb
 
 
 def create_model():
     # Load the MobileNetV2 network, ensure the head layers are not included
     base_model = MobileNetV2(
-                    weights="imagenet",
-                    include_top=False,
-                    input_tensor=Input(shape=(224, 224, 3))
-                    )
+        weights="imagenet", include_top=False, input_tensor=Input(shape=(224, 224, 3))
+    )
 
     # Create the head of the model that will be placed on the top of base model
     head_model = base_model.output
@@ -106,15 +101,11 @@ def create_model():
     # Compile created model
     print("|*DEBUG*| MODEL COMPILING")
     optimizer = Adam(lr=INITIAL_LEARNING_RATE, decay=INITIAL_LEARNING_RATE / EPOCHS)
-    model.compile(
-        loss="binary_crossentropy",
-        optimizer=optimizer,
-        metrics=["accuracy"]
-        )
+    model.compile(loss="binary_crossentropy", optimizer=optimizer, metrics=["accuracy"])
     return model
 
 
-def train_model(trainX, testX, trainY, testY, augmented_data, model):
+def train_model(trainX, testX, trainY, testY, augmented_data, model, lb):
     # Train model head
     print("|*DEBUG*| NETWORK HEAD TRAINING")
     model_head = model.fit(
@@ -122,7 +113,8 @@ def train_model(trainX, testX, trainY, testY, augmented_data, model):
         steps_per_epoch=len(trainX) // BATCH_SIZE,
         validation_data=(testX, testY),
         validation_steps=len(testX) // BATCH_SIZE,
-        epochs=EPOCHS)
+        epochs=EPOCHS,
+    )
 
     # Make predictions on testing set
     print("|*DEBUG*| NETWORK PREDICTIONS ON TESTING SET")
@@ -133,8 +125,9 @@ def train_model(trainX, testX, trainY, testY, augmented_data, model):
     predIdxs = np.argmax(predIdxs, axis=1)
 
     # Print classification report
-    print classification_report(testY.argmax(axis=1), predIdxs,
-                                target_names=lb.classes_)
+    print(
+        classification_report(testY.argmax(axis=1), predIdxs, target_names=lb.classes_)
+    )
     # Save model to disc
     print("|*DEBUG*| MODEL SAVING")
     model.save("mask_detector.model", save_format="h5")
@@ -144,26 +137,10 @@ def train_model(trainX, testX, trainY, testY, augmented_data, model):
 def plot_model_results(model_head):
     plt.style.use("ggplot")
     plt.figure()
-    plt.plot(
-        np.arange(0, EPOCHS),
-        model_head.history["loss"],
-        label="train_loss"
-        )
-    plt.plot(
-        np.arange(0, EPOCHS),
-        model_head.history["val_loss"],
-        label="val_loss"
-        )
-    plt.plot(
-        np.arange(0, EPOCHS),
-        model_head.history["accuracy"],
-        label="train_acc"
-        )
-    plt.plot(
-        np.arange(0, EPOCHS),
-        model_head.history["val_accuracy"],
-        label="val_acc"
-        )
+    plt.plot(np.arange(0, EPOCHS), model_head.history["loss"], label="train_loss")
+    plt.plot(np.arange(0, EPOCHS), model_head.history["val_loss"], label="val_loss")
+    plt.plot(np.arange(0, EPOCHS), model_head.history["accuracy"], label="train_acc")
+    plt.plot(np.arange(0, EPOCHS), model_head.history["val_accuracy"], label="val_acc")
     plt.title("Training Loss and Accuracy")
     plt.xlabel("Epoch X")
     plt.ylabel("Loss/Accuracy")
@@ -172,16 +149,9 @@ def plot_model_results(model_head):
 
 
 def run_training():
-    trainX, testX, trainY, testY, augmented_data = load_dataset()
+    trainX, testX, trainY, testY, augmented_data, lb = load_dataset()
     model = create_model()
-    head_model = train_model(
-        trainX,
-        testX,
-        trainY,
-        testY,
-        augmented_data,
-        model
-        )
+    head_model = train_model(trainX, testX, trainY, testY, augmented_data, model, lb)
     plot_model_results(head_model)
 
 
